@@ -37,7 +37,7 @@ func (F *FirstServer)getBankInvoiceList(stub shim.ChaincodeStubInterface) pb.Res
 	}
 	mapValue := make(map[string]string)
 	mapValue["invoiceFinancingBank"] = orgName
-	value,err := getListForMap(stub,mapValue)
+	value,err := getListForAndMap(stub,mapValue)
 	if(err!=nil){
 		return shim.Error(err.Error())
 	}
@@ -47,11 +47,25 @@ func (F *FirstServer)getBankInvoiceList(stub shim.ChaincodeStubInterface) pb.Res
 /**
   获取发票信息
  */
+func (F *FirstServer)getRelationInvoiceList(stub shim.ChaincodeStubInterface) pb.Response{
+	userName,err := getUserName(stub)
+	mapValue := make(map[string]string)
+	mapValue["invoiceSeller"] = userName
+	mapValue["invoiceBuyer"] = userName
+	value,err := getListForOrMap(stub,mapValue)
+	if(err!=nil){
+		return shim.Error(err.Error())
+	}
+	return shim.Success(value)
+}
+/**
+  获取发票信息
+ */
 func (F *FirstServer)getUserInvoiceList(stub shim.ChaincodeStubInterface) pb.Response{
 	userName,err := getUserName(stub)
 	mapValue := make(map[string]string)
 	mapValue["createBy"] = userName
-	value,err := getListForMap(stub,mapValue)
+	value,err := getListForAndMap(stub,mapValue)
 	if(err!=nil){
 		return shim.Error(err.Error())
 	}

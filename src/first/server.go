@@ -71,8 +71,14 @@ func getListResult(stub shim.ChaincodeStubInterface,sql string) ([]byte,error){
 	return buffer.Bytes(), nil
 }
 
-func getListForMap(stub shim.ChaincodeStubInterface,mapValue map[string]string) ([]byte,error){
-	var sql = buildEqualsSql(mapValue)
+func getListForAndMap(stub shim.ChaincodeStubInterface,mapValue map[string]string) ([]byte,error){
+	var sql = buildAndSql(mapValue)
+	value , err:= getListResult(stub,sql)
+	return value , err
+}
+
+func getListForOrMap(stub shim.ChaincodeStubInterface,mapValue map[string]string) ([]byte,error){
+	var sql = buildOrSql(mapValue)
 	value , err:= getListResult(stub,sql)
 	return value , err
 }

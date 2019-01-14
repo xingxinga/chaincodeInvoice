@@ -52,6 +52,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 	  case "getBankInvoiceList":return firstServer.getBankInvoiceList(stub)//已完成
 
+	  case "getRelationInvoiceList":return firstServer.getRelationInvoiceList(stub)//已完成
+
 	  case "select":return t.selectInvoice(stub, args)
 
 	  case "test":return t.test(stub, args)
@@ -76,6 +78,7 @@ func (t *SimpleChaincode) selectInvoice(stub shim.ChaincodeStubInterface, args [
 }
 
 func (t *SimpleChaincode) test(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	stub.GetHistoryForKey("")
 	orgName,_:= getOrgName(stub)
 	userName,_:=getUserName(stub)
 	fmt.Printf("orgName is: %s", orgName)
