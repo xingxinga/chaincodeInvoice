@@ -27,6 +27,20 @@ func (F *FirstServer)getInvoice(stub shim.ChaincodeStubInterface,args []string) 
 /**
   获取发票信息
  */
+func (F *FirstServer)getInvoiceHistory(stub shim.ChaincodeStubInterface,args []string) pb.Response{
+	if len(args) != 2 {
+		return shim.Error("canshu shuliang cuowu")
+	}
+	value,err := getInvoiceHistoryByte(stub,args[0],args[1])
+	if(err!=nil){
+		return shim.Error(err.Error())
+	}
+	return shim.Success(value)
+}
+
+/**
+  获取发票信息
+ */
 func (F *FirstServer)getBankInvoiceList(stub shim.ChaincodeStubInterface) pb.Response{
 	orgName,err:= getOrgName(stub)
 	if(err!=nil){
@@ -188,6 +202,26 @@ func getInvoice(stub shim.ChaincodeStubInterface,invoiceCode string, invoiceNo s
 	}
 	json.Unmarshal(value, &invoice)
 	return invoice,error
+}
+
+func getInvoiceHistoryByte(stub shim.ChaincodeStubInterface,invoiceCode string, invoiceNo string) ([]byte,error){
+	var err error
+	key,error:=creatKey(invoiceCode,invoiceNo)
+	if error !=nil{
+		return nil,error
+	}
+	value,error := getHistoryResult(stub,key)
+	return value,err
+}
+
+func getInvoiceHistory(stub shim.ChaincodeStubInterface,invoiceCode string, invoiceNo string) ([]Invoice,error){
+	var list []Invoice
+	value,error:=getInvoiceHistoryByte(stub,invoiceCode,invoiceNo)
+	if error !=nil{
+		return list,error
+	}
+	json.Unmarshal(value, &list)
+	return list,error
 }
 
 func saveInvoice(stub shim.ChaincodeStubInterface,invoice Invoice) ([]byte,error){

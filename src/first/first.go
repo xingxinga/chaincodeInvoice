@@ -9,6 +9,7 @@ import (
 	"encoding/pem"
 	"crypto/x509"
 	"strconv"
+	"encoding/json"
 )
 
 type Invoice struct {
@@ -54,9 +55,13 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 	  case "getRelationInvoiceList":return firstServer.getRelationInvoiceList(stub)//已完成
 
+	  case "getInvoiceHistory":return firstServer.getInvoiceHistory(stub,args)//已完成
+
 	  case "select":return t.selectInvoice(stub, args)
 
 	  case "test":return t.test(stub, args)
+
+	  case "testList":return t.testList(stub, args)
 
 
 	}
@@ -87,6 +92,24 @@ func (t *SimpleChaincode) test(stub shim.ChaincodeStubInterface, args []string) 
 	testCertificateIssuer(stub,args)
 	testCertificateSubject(stub,args)
 	return shim.Success([]byte("aaaaaaaa"))
+}
+
+func (t *SimpleChaincode) testList(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	userName,err := getUserName(stub)
+	mapValue := make(map[string]string)
+	mapValue["createBy"] = userName
+	value,err := getListForAndMap(stub,mapValue)
+	if(err!=nil){
+		return shim.Error(err.Error())
+	}
+	var list []Invoice
+	json.Unmarshal(value, &list)
+	fmt.Println("********** begin list *********")
+	for _, v := range list {//range returns both the index and value
+		fmt.Println("InvoiceCode : "+v.InvoiceCode)
+		fmt.Println("InvoiceNo : "+v.InvoiceNo)
+	}
+	return shim.Success(value)
 }
 
 func testCertificateIssuer(stub shim.ChaincodeStubInterface, args []string)(string,string){
