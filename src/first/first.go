@@ -62,7 +62,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 	  case "select":return t.selectInvoice(stub, args)
 
-	  case "test":return firstServer.getNewInvoiceTest(stub, args)
+	  case "checkInvoice":return firstServer.checkInvoice(stub, args) //验证账本中最新发票
+
+	  case "test":return t.testList(stub, args)
 
 	  case "testList":return t.testList(stub, args)
 

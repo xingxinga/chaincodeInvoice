@@ -304,7 +304,7 @@ func saveInvoice(stub shim.ChaincodeStubInterface,invoice Invoice) ([]byte,error
 /**
   获取发票信息
  */
-func (F *FirstServer)getNewInvoiceTest(stub shim.ChaincodeStubInterface,args []string) pb.Response{
+func (F *FirstServer)checkInvoice(stub shim.ChaincodeStubInterface,args []string) pb.Response{
 	fmt.Printf("kaisih ceshi lalala :\n")
 	var historyLedger []LedgerHistory
 	historyLedgerString,err :=  getInvoiceHistoryLedgerString(stub,args[0],args[1])
