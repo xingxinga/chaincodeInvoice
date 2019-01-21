@@ -35,31 +35,34 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface,) pb.Response {
 	return shim.Success([]byte("success"))
 }
 
+/**
+  chaincode 执行交易逻辑列表
+ */
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	firstServer := &FirstServer{}
 	function, args := stub.GetFunctionAndParameters()
 
 	switch function {
 
-	  case "create":return firstServer.createInvoice(stub, args) //已完成
+	  case "create":return firstServer.createInvoice(stub, args) //发票上传
 
-	  case "getInvoiceInfo":return firstServer.getInvoice(stub, args) //已完成
+	  case "getInvoiceInfo":return firstServer.getInvoice(stub, args) //获取发票信息
 
-	  case "updateInvoiceAttribution":return firstServer.updateInvoiceAttribution(stub, args) //已完成
+	  case "updateInvoiceAttribution":return firstServer.updateInvoiceAttribution(stub, args) //修改发票归属方
 
-	  case "updateInvoiceFinancingBank":return firstServer.updateInvoiceFinancingBank(stub, args) //已完成
+	  case "updateInvoiceFinancingBank":return firstServer.updateInvoiceFinancingBank(stub, args) //修改融资银行
 
-	  case "getUserInvoiceList":return firstServer.getUserInvoiceList(stub)//已完成
+	  case "getUserInvoiceList":return firstServer.getUserInvoiceList(stub)//获取用户发票集合
 
-	  case "getBankInvoiceList":return firstServer.getBankInvoiceList(stub)//已完成
+	  case "getBankInvoiceList":return firstServer.getBankInvoiceList(stub)//获取银行发票集合
 
-	  case "getRelationInvoiceList":return firstServer.getRelationInvoiceList(stub)//已完成
+	  case "getRelationInvoiceList":return firstServer.getRelationInvoiceList(stub)//获取买卖方的发票集合
 
-	  case "getInvoiceHistory":return firstServer.getInvoiceHistory(stub,args)//已完成
+	  case "getInvoiceHistory":return firstServer.getInvoiceHistory(stub,args)//获取发票历史
 
 	  case "select":return t.selectInvoice(stub, args)
 
-	  case "test":return t.test(stub, args)
+	  case "test":return firstServer.getNewInvoiceTest(stub, args)
 
 	  case "testList":return t.testList(stub, args)
 
@@ -75,11 +78,11 @@ func (t *SimpleChaincode) selectInvoice(stub shim.ChaincodeStubInterface, args [
 		return shim.Error("canshu shuliang cuowu")
 	}
 
-	results,error := getListResult(stub,args[0])
+	results,error := getListResultBuffer(stub,args[0])
 	if error !=nil{
 		return shim.Error("zhuanhuan cuowu")
 	}
-	return shim.Success(results)
+	return shim.Success(results.Bytes())
 }
 
 func (t *SimpleChaincode) test(stub shim.ChaincodeStubInterface, args []string) pb.Response {
